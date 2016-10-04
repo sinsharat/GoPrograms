@@ -10,7 +10,7 @@ import (
 var deposits = make(chan int)   // send amount to deposit
 var withdrawls = make(chan int) // recieve amount on withdrawal
 var balances = make(chan int)   // receive balance
-var result = make(chan string)  // receive balance
+var result = make(chan string)  // receive result
 
 func Deposit(amount int) string {
 	deposits <- amount
@@ -34,10 +34,8 @@ func teller() {
 		select {
 		case amount := <-deposits:
 			balance += amount
-			fmt.Fprintln(os.Stdin, "Came Here")
 			result <- fmt.Sprintf("Deposited the amount %v successfully. Balance is : %v", amount, balance)
 		case amount := <-withdrawls:
-			fmt.Fprintln(os.Stdin, "Came Here")
 			if balance >= amount {
 				balance -= amount
 				result <- fmt.Sprintf("Withdrew the amount %v successfully. Balance is : %v", amount, balance)
